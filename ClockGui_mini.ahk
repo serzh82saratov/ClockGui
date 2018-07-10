@@ -1,3 +1,24 @@
+#SingleInstance Force
+#NoEnv
+ListLines Off
+SetBatchLines -1
+
+Gui, +HWNDhMain -DPIScale -Caption +AlwaysOnTop +E0x20 +ToolWindow
+Gui, Margin, 0, 0
+Gui, Color, F9D886
+Clock := New ClockGui(hMain, "Sec|w 400|h 100|db 20|bckgitem F9D886|coloritem 5671BD|Font s80|FontName Comic Sans MS|Colon Flash v16")
+Clock.StartClock()
+Clock.Show()
+
+Clock2 := New ClockGui(hMain, "Pos xp y+0|Sec|w 400|h 120|db 20|bckgitem 5671BD|bckgmain 5671BD|coloritem F9D886|Font s80|FontName Comic Sans MS|Colon Flash v16")
+Clock2.StartClock()
+Clock2.Show()
+
+Gui, Show, NA x5 y5
+WinSet, TransColor, F9D886 128, ahk_id %hMain%
+Return
+
+
 Class ClockGui {
 	;  Автор - serzh82saratov
 	;  Описание - http://forum.script-coding.com/viewtopic.php?id=12931
