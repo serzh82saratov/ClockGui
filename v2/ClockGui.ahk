@@ -58,6 +58,7 @@ Class ClockGui {
 			hWnd := This.hWnd
 			Gui, %hWnd%:Default
 		}
+		Gui, Font
 		Gui, Font, %Font%, %FontName%
 		Gui, Color, %BckgItem%
 
