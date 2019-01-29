@@ -1,6 +1,7 @@
 Class ClockGui {
 	;  автор - serzh82saratov
 	;  описание - http://forum.script-coding.com/viewtopic.php?id=12931
+	;  исходник - https://raw.githubusercontent.com/serzh82saratov/ClockGui/master/v2/ClockGui.ahk
 
 	Static WM_LBUTTONDOWN := 0x201, WM_LBUTTONDBLCLK := 0x203, WM_RBUTTONDOWN := 0x204
 	, WM_RBUTTONDBLCLK := 0x206, WM_MOUSEWHEEL := 0x020A, WM_MBUTTONDOWN := 0x0207, Mem := {}
