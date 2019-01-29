@@ -1,5 +1,6 @@
 Class ClockGui {
 	;  автор - serzh82saratov
+	;  версия - 2.0
 	;  описание - http://forum.script-coding.com/viewtopic.php?id=12931
 	;  исходник - https://raw.githubusercontent.com/serzh82saratov/ClockGui/master/v2/ClockGui.ahk
 
