@@ -1,6 +1,6 @@
 Class ClockGui {
 	;  автор - serzh82saratov
-	;  версия - 2.0
+	;  версия - 2.01
 	;  описание - http://forum.script-coding.com/viewtopic.php?id=12931
 	;  исходник - https://raw.githubusercontent.com/serzh82saratov/ClockGui/master/v2/ClockGui.ahk
 
@@ -8,15 +8,16 @@ Class ClockGui {
 	, WM_RBUTTONDBLCLK := 0x206, WM_MOUSEWHEEL := 0x020A, WM_MBUTTONDOWN := 0x0207, Mem := {}
 
 	__New(hParent, Option) {
+		Local Class
+		Class := This.__Class, Class := %Class%, This.ThisClass := Class
+		This.Initialize()
 		This.Change(hParent, Option, 0)
 	}
 	Change(hParent, Option, IsChange = 1) {
 		Local Font, FontName, Width, Height, Sec, Name, DB, DS, hH1, hH2, hM1, hM2, hS1, hS2, hF1, hF2, W, FlashTime, Flash, Class
 		, Colon, Colon_O, S_DefaultGui, S_FormatInteger, RealWidth, hWnd, ColorItem, BckgItem, BckgMain, Off, k, v, rm, rm1
 		,  hDel1,  hDel2,  hDel3,  hDel4,  hDel5,  hDel6,  hDel7,  hDel8,  hDel9
-		Class := This.__Class, Class := %Class%, This.ThisClass := Class
-
-		This.Initialize()
+		
 		S_FormatInteger := A_FormatInteger
 		SetFormat, IntegerFast, D
 		Option := "|" Option "|"
@@ -47,16 +48,16 @@ Class ClockGui {
 				DllCall("DestroyWindow", "Ptr", This[v])
 
 		S_DefaultGui := A_DefaultGui
-		If !IsChange
+		If IsChange
+		{
+			hWnd := This.hWnd
+			Gui, %hWnd%:Default
+		}
+		Else
 		{
 			Gui, New
 			Gui, +HWNDhWnd -DPIScale -Caption +0x40000000 -0x80000000  ; Add WS_CHILD, remove WS_POPUP, setparent no deactivate main gui
 			Gui, Margin, 0, 0
-		}
-		Else
-		{
-			hWnd := This.hWnd
-			Gui, %hWnd%:Default
 		}
 		Gui, Font
 		Gui, Font, %Font%, %FontName%
@@ -97,10 +98,10 @@ Class ClockGui {
 		Gui, %hParent%:Add, Text, Hidden HWNDhDummy %Pos% w0 h0
 		GuiControlGet, MyPos, Pos, %hDummy%
 		DllCall("DestroyWindow", "Ptr", hDummy)
-		If !IsChange
-			Gui, Show, Hide AutoSize x%MyPosX% y%MyPosY%
-		Else
+		If IsChange
 			Gui, Show, AutoSize x%MyPosX% y%MyPosY%
+		Else
+			Gui, Show, Hide AutoSize x%MyPosX% y%MyPosY%
 		Gui, %S_DefaultGui%:Default
 		WinGetPos, , , RealWidth, RealHeight, ahk_id %hWnd%
 		Gui, %hParent%:Add, Text, Hidden HWNDhDummy x%MyPosX% y%MyPosY% w%RealWidth% h%RealHeight% %Section%
