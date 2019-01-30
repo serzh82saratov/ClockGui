@@ -1,6 +1,6 @@
 Class ClockGui {
 	;  автор - serzh82saratov
-	;  версия - 2.02
+	;  версия - 2.03
 	;  описание - http://forum.script-coding.com/viewtopic.php?id=12931
 	;  исходник - https://raw.githubusercontent.com/serzh82saratov/ClockGui/master/v2/ClockGui.ahk
 
@@ -115,6 +115,7 @@ Class ClockGui {
 
 		For, k, v in ["hWnd","Name","Sec","RealWidth","RealHeight","FlashTime","hParent"
 					,"Pos","Height","Flash","BckgMain","BckgItem","ColorItem"
+					,"hDel1","hDel2","hDel3","hDel4","hDel5","hDel6","hDel7","hDel8","hDel9"
 					,"hH1","hH2","hM1","hM2","hS1","hS2","hF1","hF2"]
 			This[v] := %v%
 		For k, v in ["H1","H2","M1","M2","S1","S2"]
