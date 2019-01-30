@@ -1,6 +1,6 @@
 Class ClockGui {
 	;  автор - serzh82saratov
-	;  версия - 2.03
+	;  версия - 2.04
 	;  описание - http://forum.script-coding.com/viewtopic.php?id=12931
 	;  исходник - https://raw.githubusercontent.com/serzh82saratov/ClockGui/master/v2/ClockGui.ahk
 
@@ -15,8 +15,14 @@ Class ClockGui {
 	}
 	Change(hParent, Option, IsChange = 1) {
 		Local Font, FontName, Width, Height, Sec, Name, DB, DS, hH1, hH2, hM1, hM2, hS1, hS2, hF1, hF2, W, FlashTime, Flash, Class
-		, Colon, Colon_O, S_DefaultGui, S_FormatInteger, RealWidth, hWnd, ColorItem, BckgItem, BckgMain, Off, k, v, rm, rm1
-		,  hDel1,  hDel2,  hDel3,  hDel4,  hDel5,  hDel6,  hDel7,  hDel8,  hDel9, S_BatchLines
+			, Colon, Colon_O, S_DefaultGui, S_FormatInteger, RealWidth, hWnd, ColorItem, BckgItem, BckgMain, Off, k, v, rm, rm1
+			, hDel1, hDel2, hDel3, hDel4, hDel5, hDel6, hDel7, hDel8, hDel9, S_BatchLines
+		
+		Static all := ["hWnd","Name","Sec","RealWidth","RealHeight","FlashTime","hParent"
+			,"Pos","Height","Flash","BckgMain","BckgItem","ColorItem"
+			,"hDel1","hDel2","hDel3","hDel4","hDel5","hDel6","hDel7","hDel8","hDel9"
+			,"hH1","hH2","hM1","hM2","hS1","hS2","hF1","hF2"]
+			, items := ["H1","H2","M1","M2","S1","S2"]
 		
 		S_BatchLines := A_BatchLines 
 		SetBatchLines, -1
@@ -113,12 +119,9 @@ Class ClockGui {
 		Gui, %hParent%:Add, Text, Hidden HWNDhDummy x%MyPosX% y%MyPosY% w%RealWidth% h%RealHeight% %Section%
 		DllCall("DestroyWindow", "Ptr", hDummy)
 
-		For, k, v in ["hWnd","Name","Sec","RealWidth","RealHeight","FlashTime","hParent"
-					,"Pos","Height","Flash","BckgMain","BckgItem","ColorItem"
-					,"hDel1","hDel2","hDel3","hDel4","hDel5","hDel6","hDel7","hDel8","hDel9"
-					,"hH1","hH2","hM1","hM2","hS1","hS2","hF1","hF2"]
+		For, k, v in all
 			This[v] := %v%
-		For k, v in ["H1","H2","M1","M2","S1","S2"]
+		For k, v in items
 			This.Mem.Ctrl[h%v%] := {Gui:hWnd, Name:v}
 		This.Mem.Gui[hWnd] := This
 		If !IsChange
@@ -133,8 +136,9 @@ Class ClockGui {
 		SetBatchLines, %S_BatchLines%
 	}
 	ChangeColor(BckgMain, BckgItem, ColorItem) {
+		Static a := ["hDel1","hDel2","hDel3","hDel4","hDel5","hDel6","hDel7","hDel8","hDel9"]
 		If BckgMain !=
-			For, k, v in ["hDel1","hDel2","hDel3","hDel4","hDel5","hDel6","hDel7","hDel8","hDel9"], This.BckgMain := BckgMain {
+			For, k, v in a, This.BckgMain := BckgMain {
 				GuiControl, % This.hWnd ": +Background" BckgMain, % This[v]
 				GuiControl, % This.hWnd ": +Redraw", % This[v]
 			}
@@ -263,7 +267,8 @@ Class ClockGui {
 	}
 	Set(h, m, s) {
 		Local k, v, d
-		For k, v in ["H1","H2","M1","M2","S1","S2"]
+		Static a := ["H1","H2","M1","M2","S1","S2"]
+		For k, v in a
 			If This[v] != (d := SubStr(h m s, k, 1))
 				GuiControl, % This.hwnd ":", % This["h" v], % This[v] := Format("{:d}", d)
 	}
