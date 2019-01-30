@@ -1,6 +1,6 @@
 Class ClockGui {
 	;  автор - serzh82saratov
-	;  версия - 2.01
+	;  версия - 2.02
 	;  описание - http://forum.script-coding.com/viewtopic.php?id=12931
 	;  исходник - https://raw.githubusercontent.com/serzh82saratov/ClockGui/master/v2/ClockGui.ahk
 
@@ -92,7 +92,7 @@ Class ClockGui {
 				Gui, Add, Progress, x+0 yp hp w%DB% Background%BckgMain% HwndhDel8
 			Gui, Add, Text, x+0 y0 w%W% hp +0x201 +0x100 c%ColorItem% HwndhS1, % This.s1
 			Gui, Add, Progress, x+0 yp hp w%DS% Background%BckgMain% HwndhDel9
-			Gui, Add, Text, x+0 y0 w%W% hp +0x201 +0x100 c%ColorItem% HwndhS2, % This.s1
+			Gui, Add, Text, x+0 y0 w%W% hp +0x201 +0x100 c%ColorItem% HwndhS2, % This.s2
 		}
 		Gui, +Parent%hParent%
 		Gui, %hParent%:Add, Text, Hidden HWNDhDummy %Pos% w0 h0
