@@ -8,16 +8,18 @@ Class ClockGui {
 	, WM_RBUTTONDBLCLK := 0x206, WM_MOUSEWHEEL := 0x020A, WM_MBUTTONDOWN := 0x0207, Mem := {}
 
 	__New(hParent, Option) {
-		Local Class
-		Class := This.__Class, Class := %Class%, This.ThisClass := Class
+		Local Class 
+		Class := This.__Class, Class := %Class%, This.ThisClass := Class 
 		This.Initialize()
 		This.Change(hParent, Option, 0)
 	}
 	Change(hParent, Option, IsChange = 1) {
 		Local Font, FontName, Width, Height, Sec, Name, DB, DS, hH1, hH2, hM1, hM2, hS1, hS2, hF1, hF2, W, FlashTime, Flash, Class
 		, Colon, Colon_O, S_DefaultGui, S_FormatInteger, RealWidth, hWnd, ColorItem, BckgItem, BckgMain, Off, k, v, rm, rm1
-		,  hDel1,  hDel2,  hDel3,  hDel4,  hDel5,  hDel6,  hDel7,  hDel8,  hDel9
+		,  hDel1,  hDel2,  hDel3,  hDel4,  hDel5,  hDel6,  hDel7,  hDel8,  hDel9, S_BatchLines
 		
+		S_BatchLines := A_BatchLines 
+		SetBatchLines, -1
 		S_FormatInteger := A_FormatInteger
 		SetFormat, IntegerFast, D
 		Option := "|" Option "|"
@@ -43,10 +45,9 @@ Class ClockGui {
 		W := (Width - (DS * (Sec ? 3 : 2) + DB * (Sec ? 2 : 1))) / (Sec ? 6 : 4)
 
 		If IsChange
-			For, k, v in ["hH1","hH2","hM1","hM2","hS1","hS2","hF1","hF2"
-			,"hDel1","hDel2","hDel3","hDel4","hDel5","hDel6","hDel7","hDel8","hDel9"]
-				DllCall("DestroyWindow", "Ptr", This[v])
-
+			For, k, v in This.AllControls
+				DllCall("DestroyWindow", "Ptr", v)
+				
 		S_DefaultGui := A_DefaultGui
 		If IsChange
 		{
@@ -59,10 +60,12 @@ Class ClockGui {
 			Gui, +HWNDhWnd -DPIScale -Caption +0x40000000 -0x80000000  ; Add WS_CHILD, remove WS_POPUP, setparent no deactivate main gui
 			Gui, Margin, 0, 0
 		}
+		If IsChange
+			Gui, Show, Hide
 		Gui, Font
 		Gui, Font, %Font%, %FontName%
 		Gui, Color, %BckgItem%
-
+		
 		Gui, Add, Text, x0 y0 w%W% h%Height% +0x201 +0x100 c%ColorItem% HwndhH1, % This.h1
 		Gui, Add, Progress, x+0 yp hp w%DS% Background%BckgMain% HwndhDel1
 		Gui, Add, Text, x+0 y0 w%W% hp +0x201 +0x100 c%ColorItem% HwndhH2, % This.h2
@@ -80,6 +83,7 @@ Class ClockGui {
 		Gui, Add, Text, x+0 y0 w%W% hp +0x201 +0x100 c%ColorItem% HwndhM1, % This.m1
 		Gui, Add, Progress, x+0 yp hp w%DS% Background%BckgMain% HwndhDel5
 		Gui, Add, Text, x+0 y0 w%W% hp +0x201 +0x100 c%ColorItem% HwndhM2, % This.m2
+		
 		If Sec
 		{
 			If Colon
@@ -98,18 +102,19 @@ Class ClockGui {
 		Gui, %hParent%:Add, Text, Hidden HWNDhDummy %Pos% w0 h0
 		GuiControlGet, MyPos, Pos, %hDummy%
 		DllCall("DestroyWindow", "Ptr", hDummy)
+		
 		If IsChange
 			Gui, Show, AutoSize x%MyPosX% y%MyPosY%
 		Else
 			Gui, Show, Hide AutoSize x%MyPosX% y%MyPosY%
 		Gui, %S_DefaultGui%:Default
+		
 		WinGetPos, , , RealWidth, RealHeight, ahk_id %hWnd%
 		Gui, %hParent%:Add, Text, Hidden HWNDhDummy x%MyPosX% y%MyPosY% w%RealWidth% h%RealHeight% %Section%
 		DllCall("DestroyWindow", "Ptr", hDummy)
 
 		For, k, v in ["hWnd","Name","Sec","RealWidth","RealHeight","FlashTime","hParent"
 					,"Pos","Height","Flash","BckgMain","BckgItem","ColorItem"
-					,"hDel1","hDel2","hDel3","hDel4","hDel5","hDel6","hDel7","hDel8","hDel9"
 					,"hH1","hH2","hM1","hM2","hS1","hS2","hF1","hF2"]
 			This[v] := %v%
 		For k, v in ["H1","H2","M1","M2","S1","S2"]
@@ -117,7 +122,14 @@ Class ClockGui {
 		This.Mem.Gui[hWnd] := This
 		If !IsChange
 			This.Stop(1)
+		If IsChange
+			This.Set(This.h1 This.h2, This.m1 This.m2, This.s1 This.s2)
+		
+		This.AllControls := [hH1,hH2,hM1,hM2,hS1,hS2,hF1,hF2
+				,hDel1,hDel2,hDel3,hDel4,hDel5,hDel6,hDel7,hDel8,hDel9]
+				
 		SetFormat, IntegerFast, %S_FormatInteger%
+		SetBatchLines, %S_BatchLines%
 	}
 	ChangeColor(BckgMain, BckgItem, ColorItem) {
 		If BckgMain !=
