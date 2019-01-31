@@ -1,6 +1,6 @@
 Class ClockGui {
 	;  автор - serzh82saratov
-	;  версия - 2.05
+	;  версия - 2.06
 	;  описание - http://forum.script-coding.com/viewtopic.php?id=12931
 	;  исходник - https://raw.githubusercontent.com/serzh82saratov/ClockGui/master/v2/ClockGui.ahk
 
@@ -137,13 +137,14 @@ Class ClockGui {
 	}
 	ChangeColor(BckgMain, BckgItem, ColorItem) {
 		Static a := ["hDel1","hDel2","hDel3","hDel4","hDel5","hDel6","hDel7","hDel8","hDel9"]
+			, b := ["hH1","hH2","hM1","hM2","hS1","hS2","hF1","hF2"]
 		If BckgMain !=
 			For, k, v in a, This.BckgMain := BckgMain {
 				GuiControl, % This.hWnd ": +Background" BckgMain, % This[v]
 				GuiControl, % This.hWnd ": +Redraw", % This[v]
 			}
 		If ColorItem !=
-			For, k, v in ["hH1","hH2","hM1","hM2","hS1","hS2","hF1","hF2"], This.ColorItem := ColorItem {
+			For, k, v in b, This.ColorItem := ColorItem {
 				GuiControl, % This.hWnd ": +c" ColorItem, % This[v]
 				GuiControl, % This.hWnd ": +Redraw", % This[v]
 			}
