@@ -1,6 +1,6 @@
 Class ClockGui {
 	;  автор - serzh82saratov
-	;  версия - 2.04
+	;  версия - 2.05
 	;  описание - http://forum.script-coding.com/viewtopic.php?id=12931
 	;  исходник - https://raw.githubusercontent.com/serzh82saratov/ClockGui/master/v2/ClockGui.ahk
 
@@ -147,8 +147,7 @@ Class ClockGui {
 				GuiControl, % This.hWnd ": +c" ColorItem, % This[v]
 				GuiControl, % This.hWnd ": +Redraw", % This[v]
 			}
-		Gui, % This.hWnd ": Color", % BckgItem != "" ? BckgItem : This.BckgItem
-		This.BckgItem := BckgItem
+		Gui, % This.hWnd ": Color", % BckgItem != "" ? (This.BckgItem := BckgItem) : This.BckgItem
 	}
 	Initialize() {
 		Static Start
