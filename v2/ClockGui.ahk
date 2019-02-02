@@ -1,6 +1,6 @@
 Class ClockGui {
 	;  автор - serzh82saratov
-	;  версия - 2.06
+	;  версия - 2.07
 	;  описание - http://forum.script-coding.com/viewtopic.php?id=12931
 	;  исходник - https://raw.githubusercontent.com/serzh82saratov/ClockGui/master/v2/ClockGui.ahk
 
@@ -141,12 +141,12 @@ Class ClockGui {
 		If BckgMain !=
 			For, k, v in a, This.BckgMain := BckgMain {
 				GuiControl, % This.hWnd ": +Background" BckgMain, % This[v]
-				GuiControl, % This.hWnd ": +Redraw", % This[v]
+				; GuiControl, % This.hWnd ": +Redraw", % This[v]
 			}
 		If ColorItem !=
 			For, k, v in b, This.ColorItem := ColorItem {
 				GuiControl, % This.hWnd ": +c" ColorItem, % This[v]
-				GuiControl, % This.hWnd ": +Redraw", % This[v]
+				; GuiControl, % This.hWnd ": +Redraw", % This[v]
 			}
 		Gui, % This.hWnd ": Color", % BckgItem != "" ? (This.BckgItem := BckgItem) : This.BckgItem
 	}
@@ -437,6 +437,13 @@ Class ClockGui {
 		This.Delete(This.MinIndex(), This.MaxIndex())
 		This.SetCapacity(0)
 		This.Base := ""
+	}
+	IsTimeInDay() {
+		Static a := {H1:2,H2:9,M1:5,M2:9,S1:5,S2:9}
+		For k, v in a
+			If (This[k] = "" || This[k] > v)
+				Return 0
+		Return 1
 	}
 	MathTime(Time1, S, Time2) {
 		Local T
