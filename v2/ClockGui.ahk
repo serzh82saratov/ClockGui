@@ -1,6 +1,6 @@
 Class ClockGui {
 	;  автор - serzh82saratov
-	;  версия - 2.07
+	;  версия - 2.08
 	;  описание - http://forum.script-coding.com/viewtopic.php?id=12931
 	;  исходник - https://raw.githubusercontent.com/serzh82saratov/ClockGui/master/v2/ClockGui.ahk
 
@@ -439,11 +439,14 @@ Class ClockGui {
 		This.Base := ""
 	}
 	IsTimeInDay() {
-		Static a := {H1:2,H2:9,M1:5,M2:9,S1:5,S2:9}
+		Static a := {H1:2,H2:9,M1:5,M2:9,S1:5,S2:9} 
 		For k, v in a
 			If (This[k] = "" || This[k] > v)
 				Return 0
-		Return 1
+		Return This.H1 This.H2 < 24
+	}
+	IsTimeEmpty() { 
+		Return This.Get() = "00:00:00"
 	}
 	MathTime(Time1, S, Time2) {
 		Local T
