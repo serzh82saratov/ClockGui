@@ -89,7 +89,17 @@ TimerStart:
 TimerRetry:
 	If (Playing)
 		GoTo Stop
+	If !Timer.Stop()
+		Return
 	Timer.SetTime(Duration)
+	Return
+
+TimerReset:
+	If (Playing)
+		GoTo Stop
+	If !Timer.Stop()
+		Return
+	Timer.SetTime(TimeStart)
 	Return
 	
 TimerPause:
@@ -111,12 +121,6 @@ Stop:
 	GuiControl, , Info
 	Playing := 0
 	Return 
-
-TimerReset:
-	If (Playing)
-		GoTo Stop
-	Timer.SetTime(TimeStart)
-	Return
 
 GuiEscape:
 GuiClose:
