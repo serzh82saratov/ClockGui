@@ -1,6 +1,7 @@
+
 Class ClockGui {
 	;  автор - serzh82saratov
-	;  версия - 2.08
+	;  версия - 2.09
 	;  описание - http://forum.script-coding.com/viewtopic.php?id=12931
 	;  исходник - https://raw.githubusercontent.com/serzh82saratov/ClockGui/master/v2/ClockGui.ahk
 
@@ -68,7 +69,7 @@ Class ClockGui {
 		}
 		If IsChange
 			Gui, Show, Hide
-		Gui, Font
+		Gui, Font 
 		Gui, Font, %Font%, %FontName%
 		Gui, Color, %BckgItem%
 		
@@ -193,7 +194,7 @@ Class ClockGui {
 		Return ret != "" && Match1 = "" ? ret  : Match1
 	}
 	NumInput(Func = "") {
-		Local S_BatchLines, Option
+		Local S_BatchLines, S_FormatInteger, Option
 		Static hMethod, PrOption
 		If !hMethod
 			hMethod := ObjBindMethod(This.ThisClass, "OnNumInput")
@@ -206,7 +207,9 @@ Class ClockGui {
 		#IF ClockGui.NumRules()
 		#IF
 		S_BatchLines := A_BatchLines
-		SetBatchLines, -1
+		SetBatchLines, -1 
+		S_FormatInteger := A_FormatInteger
+		SetFormat, IntegerFast, D
 		Hotkey, IF, ClockGui.NumRules()
 		Loop 10
 		{
@@ -217,6 +220,7 @@ Class ClockGui {
 		Hotkey, Delete, % hMethod, % Option
 		Hotkey, NumpadDot, % hMethod, % Option
 		Hotkey, IF
+		SetFormat, IntegerFast, %S_FormatInteger%
 		SetBatchLines, %S_BatchLines%
 	}
 	OnNumInput() {
