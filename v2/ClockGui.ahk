@@ -1,11 +1,11 @@
-
 Class ClockGui {
 	;  автор - serzh82saratov
-	;  версия - 2.09
+	;  версия - 2.11
+	;  01:11 14.10.2019
 	;  описание - http://forum.script-coding.com/viewtopic.php?id=12931
 	;  исходник - https://raw.githubusercontent.com/serzh82saratov/ClockGui/master/v2/ClockGui.ahk
 
-	Static WM_LBUTTONDOWN := 0x201, WM_LBUTTONDBLCLK := 0x203, WM_RBUTTONDOWN := 0x204
+	Static OnStepDelay := 300, WM_LBUTTONDOWN := 0x201, WM_LBUTTONDBLCLK := 0x203, WM_RBUTTONDOWN := 0x204
 	, WM_RBUTTONDBLCLK := 0x206, WM_MOUSEWHEEL := 0x020A, WM_MBUTTONDOWN := 0x0207, Mem := {}
 
 	__New(hParent, Option) {
@@ -30,8 +30,10 @@ Class ClockGui {
 		S_FormatInteger := A_FormatInteger
 		SetFormat, IntegerFast, D
 		Option := "|" Option "|"
-		Width := This.Option("W", Option, 0)
-		Height := This.Option("H", Option, 0)
+		If !Width := This.Option("W", Option, 0)
+			this._PrPos(hParent, _,_,w, _), Width := w 
+		If !Height := This.Option("H", Option, 0) 
+			this._PrPos(hParent, _,_,_, h), Height := h 
 		DS := This.Option("DS", Option, 0)
 		DB := This.Option("DB", Option, 0)
 		BckgMain := This.Option("BckgMain", Option, "Default")
@@ -63,7 +65,7 @@ Class ClockGui {
 		}
 		Else
 		{
-			Gui, New
+			Gui, New 
 			Gui, +HWNDhWnd -DPIScale -Caption +0x40000000 -0x80000000  ; Add WS_CHILD, remove WS_POPUP, setparent no deactivate main gui
 			Gui, Margin, 0, 0
 		}
@@ -108,12 +110,13 @@ Class ClockGui {
 		Gui, +Parent%hParent%
 		Gui, %hParent%:Add, Text, Hidden HWNDhDummy %Pos% w0 h0
 		GuiControlGet, MyPos, Pos, %hDummy%
-		DllCall("DestroyWindow", "Ptr", hDummy)
+		DllCall("DestroyWindow", "Ptr", hDummy) 
 		
 		If IsChange
 			Gui, Show, AutoSize x%MyPosX% y%MyPosY%
 		Else
 			Gui, Show, Hide AutoSize x%MyPosX% y%MyPosY%
+			
 		Gui, %S_DefaultGui%:Default
 		
 		WinGetPos, , , RealWidth, RealHeight, ahk_id %hWnd%
@@ -162,6 +165,11 @@ Class ClockGui {
 		OnMessage(This.ThisClass.WM_RBUTTONDBLCLK, ObjBindMethod(This.ThisClass, "OnButtonDown"))
 		OnMessage(This.ThisClass.WM_MOUSEWHEEL, ObjBindMethod(This.ThisClass, "OnMouseWheel"))
 		OnMessage(This.ThisClass.WM_MBUTTONDOWN, ObjBindMethod(This.ThisClass, "OnMbuttonDown"))
+	}
+	_PrPos(hParent, Byref MyPosx, Byref MyPosy, Byref MyPosw, Byref MyPosh) {
+		Gui, %hParent%:Add, Text, Hidden HWNDhDummy xp yp wp hp
+		GuiControlGet, MyPos, Pos, %hDummy%
+		DllCall("DestroyWindow", "Ptr", hDummy)
 	}
 	Show(Show=1) {
 		Gui, % This.hWnd ":" (Show ? "Show" : "Hide"), % (Show ? "NA" : "")
@@ -258,16 +266,24 @@ Class ClockGui {
 		l := SubStr(This.Mem.Ctrl[hwnd].Name, 1, 1)
 		GuiControl, % A_Gui ":", % o["h" l 1], % o[l 1] := "0"
 		GuiControl, % A_Gui ":", % o["h" l 2], % o[l 2] := "0"
-		Return 1
+		Return 1, This._OnStep(o)
 	}
 	Step(add, c, hwnd, o="", b=0) {
-		Static a := {H1:2,H2:9,M1:5,M2:9,S1:5,S2:9}
-		o := This.Mem.Gui[hwnd]
+		Static a := {H1:2,H2:9,M1:5,M2:9,S1:5,S2:9} 
+		o := This.Mem.Gui[hwnd] 
 		o[c] := Format("{:d}", add ? (o[c] >= a[c] ? 0 : o[c] + 1) : (o[c] = 0 || o[c] > a[c] ? a[c] : o[c] - 1))
 		If InStr(c, "h") && (o.H1 o.H2 > 23) && (1, b := c = "H2")
 			GuiControl, % o.hwnd ":", % o["hH2"], % o.H2 := (c = "H1" || add ? "0" : "3")
 		If !b
 			GuiControl, % o.hwnd ":", % o["h" c], % o[c]
+		This._OnStep(o)
+	}
+	_OnStep(o) {
+		If o.OnStep
+		{
+			hFunc := Func(o.OnStep).Bind(o)
+			SetTimer, % hFunc, % "-" o.OnStepDelay
+		}  
 	}
 	Set(h, m, s) {
 		Local k, v, d
@@ -364,7 +380,7 @@ Class ClockGui {
 			This.TimerStart := A_TickCount + 1000
 			TimerPeriod := This.DifferenceTime(This.CheckDate, A_Hour ":" A_Min ":" A_Sec, 1) - A_Msec
 			This.TimerPeriod := TimerPeriod <= 0 ? 86400000 + TimerPeriod : TimerPeriod
-			This.SetTimer(10, 3, This.Func)
+			This.SetTimer(10, 3, This.Func) 
 		}
 		If This.InDay
 			t := (1000 - A_Msec)
@@ -497,3 +513,4 @@ Class ClockGui {
 		Return T
 	}
 }
+  
